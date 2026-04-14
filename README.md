@@ -1,4 +1,4 @@
-# SecureSight AI CCTV System
+# SecureSight AI CCTV System by Sentinel-AI
 
 ## 🚀 Features
 - Face Recognition
