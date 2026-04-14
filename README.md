@@ -40,8 +40,6 @@ Set env variables:
 export TELEGRAM_TOKEN=your_token
 export TELEGRAM_CHAT_ID=your_chat_id
 export API_KEY=supersecret
-# 🌐 Dashboard Updated:
-Your live dashboard at https://crowbar-oven-drone.ngrok-free.dev will now reflect the new SecureSight AI branding.
 # 🔐 🔥 WHAT CHANGED (IMPORTANT)
 ✅ 1. API Key Protection
 Every request now includes:
