@@ -456,7 +456,105 @@ python3 -c "from dotenv import load_dotenv; load_dotenv(); import os; print('✅
 python main.py
 # Should see: "✅ Flask server started!"
 ```
+# Sentinel AI CCTV — Security Integration Guide
 
+## Files in this patch
+
+| File | Purpose |
+|------|---------|
+| `.env.example` | Template — copy to `.env` and fill values |
+| `.gitignore` | Prevents secrets/data leaking to GitHub |
+| `security_patch.py` | Backend: secrets, auth middleware, cleanup |
+| `secure_frontend.js` | Frontend: API key prompt, secure fetches, consent banner |
+
+---
+
+## How to integrate
+
+### 1. Set up secrets
+```bash
+cp .env.example .env
+# Edit .env with your real values
+pip install python-dotenv
+```
+
+### 2. Update your main Flask app (e.g. app.py)
+
+Replace your old hardcoded credentials and add two imports at the top:
+
+```python
+# OLD (remove these):
+# TELEGRAM_TOKEN = "xxxx"
+# TELEGRAM_CHAT_ID = "xxxx"
+
+# NEW (add at the very top):
+from security_patch import (
+    API_KEY, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID,
+    AUTO_LEARN_ENABLED, cleanup_old_files,
+    register_auth
+)
+
+app = Flask(__name__)
+register_auth(app)   # <-- adds API key check to all routes except "/"
+```
+
+### 3. Wrap auto-learn logic
+
+```python
+if AUTO_LEARN_ENABLED:
+    # your existing auto-learn code
+    save_unknown_face(face_image)
+else:
+    face_name = "Unknown"
+```
+
+### 4. Call cleanup in your main loop
+
+```python
+while True:
+    cleanup_old_files("evidence")
+    cleanup_old_files("unknown_faces")
+    # ... rest of your loop
+    time.sleep(1)
+```
+
+### 5. Update your HTML
+
+Replace the old stream tag and add the script:
+
+```html
+<!-- OLD: <img src="/stream"> -->
+<div class="video-container">
+  <img id="video" alt="Camera Feed">
+</div>
+
+<script src="secure_frontend.js"></script>
+```
+
+### 6. Clean repo before pushing
+
+```bash
+# Remove any committed secrets or data
+git rm -r --cached evidence/ unknown_faces/ .env 2>/dev/null
+git add .gitignore
+git commit -m "security: remove secrets and sensitive data from tracking"
+git push
+```
+
+---
+
+## Checklist
+
+- [ ] `.env` created and filled (never committed)
+- [ ] `.gitignore` in repo root
+- [ ] `security_patch.py` imported in `app.py`
+- [ ] `register_auth(app)` called
+- [ ] Auto-learn wrapped with `AUTO_LEARN_ENABLED` flag
+- [ ] `cleanup_old_files()` called in main loop
+- [ ] `secure_frontend.js` included in HTML
+- [ ] Old hardcoded tokens removed from all `.py` files
+- [ ] Repo history checked — no tokens in old commits
+  (use `git log -S "your_token"` to check)
 ---
 
 **🎉 Your project is now production-ready and hackathon-winning! 🏆**
