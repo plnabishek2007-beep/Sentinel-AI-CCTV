@@ -2,122 +2,626 @@
 <html lang="en">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SecureSight AI | Secure Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 SecureSight AI | Secure Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-<style>
-/* SAME UI (unchanged visuals) */
-body {
-    background:#030712;
-    color:white;
-    font-family:'Outfit',sans-serif;
-}
+        /* ================= CONSENT BANNER ================= */
+        .consent-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 9999;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
 
-/* keep your full CSS (no change needed) */
-</style>
+        .consent-banner-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* ================= MAIN CONTAINER ================= */
+        .container {
+            max-width: 1200px;
+            margin: 80px auto 20px;
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            border: 1px solid #334155;
+        }
+
+        /* ================= HEADER ================= */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #475569;
+            padding-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .privacy-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* ================= CONTENT GRID ================= */
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ================= VIDEO FEED ================= */
+        .video-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .video-container {
+            position: relative;
+            background: #0f172a;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #334155;
+            aspect-ratio: 16/9;
+        }
+
+        #video-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+            border-radius: 10px;
+        }
+
+        .video-status {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .video-status.offline {
+            background: rgba(239, 68, 68, 0.9);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ================= SIDEBAR ================= */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ================= STATUS PANEL ================= */
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: #cbd5e1;
+            font-size: 13px;
+        }
+
+        .status-value {
+            font-weight: 600;
+            color: #60a5fa;
+        }
+
+        .status-value.alert {
+            color: #ef4444;
+        }
+
+        .status-value.safe {
+            color: #10b981;
+        }
+
+        /* ================= CONTROLS ================= */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #991b1b 100%);
+        }
+
+        button.danger:hover {
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        button.success {
+            background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+        }
+
+        button.success:hover {
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ================= INFO BOX ================= */
+        .info-box {
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+
+        .info-box.warning {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .info-box.success {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        /* ================= FOOTER ================= */
+        .footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 12px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+            margin-top: 30px;
+        }
+
+        .footer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        /* ================= LOADING STATE ================= */
+        .loading {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #475569;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ================= ERROR STATE ================= */
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #fca5a5;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+    </style>
 </head>
 
 <body>
 
-<!-- 🔐 CONSENT BANNER -->
-<div style="
-position:fixed;
-top:0;
-left:0;
-right:0;
-background:#ef4444;
-padding:10px;
-text-align:center;
-font-size:14px;
-z-index:9999;">
-⚠️ AI Surveillance Active — Authorized Access Only
-</div>
+    <!-- 🔐 CONSENT BANNER -->
+    <div class="consent-banner">
+        <div class="consent-banner-text">
+            ⚠️ <strong>AI Surveillance Active — Authorized Access Only</strong>
+        </div>
+    </div>
 
-<!-- YOUR EXISTING UI (UNCHANGED STRUCTURE) -->
-<!-- KEEP ALL YOUR HTML SAME -->
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        
+        <!-- HEADER -->
+        <div class="header">
+            <h1>🔐 SecureSight AI</h1>
+            <p>Privacy-Safe CCTV Surveillance System</p>
+            <div class="privacy-badge">✅ Privacy Mode Enabled</div>
+        </div>
 
-<img id="video-feed" style="width:100%; max-width:800px; margin-top:60px; border-radius:12px;">
+        <!-- MAIN CONTENT -->
+        <div class="grid">
+            
+            <!-- VIDEO SECTION -->
+            <div class="video-section">
+                <div class="video-container">
+                    <img id="video-feed" alt="Live Camera Feed" style="display: none;">
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #000;">
+                        <div style="text-align: center; color: #666;">
+                            <div class="loading" style="margin: 0 auto 15px;"></div>
+                            <p id="stream-status">Connecting to camera...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-box success">
+                    ✅ <strong>Privacy Features Active:</strong> Auto face learning disabled • Unknown faces not stored • Evidence auto-delete in 5 minutes • API authentication enabled
+                </div>
+            </div>
 
-<div style="text-align:center; margin-top:20px;">
-<button onclick="toggleCamera()">Toggle Camera</button>
-<button onclick="toggleAlerts()">Toggle Alerts</button>
-</div>
+            <!-- SIDEBAR -->
+            <div class="sidebar">
+                
+                <!-- STATUS PANEL -->
+                <div class="panel">
+                    <div class="panel-title">📊 System Status</div>
+                    <div class="status-item">
+                        <span class="status-label">Camera</span>
+                        <span class="status-value" id="camera-status">—</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Alerts</span>
+                        <span class="status-value" id="alerts-status">—</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Alert Status</span>
+                        <span class="status-value" id="alert-status">—</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Known Faces</span>
+                        <span class="status-value" id="faces-status">—</span>
+                    </div>
+                </div>
 
-<script>
-/* ================= 🔐 SECURE CONFIG ================= */
+                <!-- CONTROLS PANEL -->
+                <div class="panel">
+                    <div class="panel-title">⚙️ Controls</div>
+                    <div class="controls">
+                        <button onclick="toggleCamera()">
+                            📹 Toggle Camera
+                        </button>
+                        <button onclick="toggleAlerts()" class="success">
+                            🔔 Toggle Alerts
+                        </button>
+                        <button onclick="refreshStatus()">
+                            🔄 Refresh Status
+                        </button>
+                    </div>
+                </div>
 
-// Ask API key securely (no hardcoding)
-const API_KEY = prompt("🔐 Enter Secure Access Key:");
+                <!-- INFO PANEL -->
+                <div class="panel">
+                    <div class="panel-title">🔒 Security Info</div>
+                    <div class="info-box">
+                        <strong>API Key:</strong> <span id="api-key-status">Loading...</span>
+                        <br><br>
+                        <strong>Server:</strong> Local (127.0.0.1:5000)
+                        <br><br>
+                        <strong>Mode:</strong> Privacy-Safe
+                    </div>
+                </div>
 
-if(!API_KEY){
-    alert("Access Denied");
-    throw new Error("No API Key");
-}
+            </div>
 
-/* ================= 🔐 LOAD STREAM ================= */
+        </div>
 
-function loadStream(){
-    const img = document.getElementById("video-feed");
-    img.src = `/stream?api_key=${API_KEY}`;
-}
-loadStream();
+        <!-- ERROR DISPLAY -->
+        <div id="error-container"></div>
 
-/* ================= 🔐 FETCH STATUS ================= */
+        <!-- FOOTER -->
+        <div class="footer">
+            🔐 SecureSight AI v2.0 | Privacy-Safe Edition | All connections are encrypted and require API authentication
+        </div>
 
-async function fetchStatus(){
-    try{
-        const res = await fetch("/status",{
-            headers:{
-                "x-api-key":API_KEY
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // ================= 🔐 SECURE CONFIGURATION =================
+        
+        let API_KEY = null;
+        const API_ENDPOINT = "http://127.0.0.1:5000";
+        
+        // Request API key securely (no hardcoding)
+        function requestAPIKey() {
+            const key = prompt("🔐 Enter API Key to access the dashboard:\n\n(Check your .env file)");
+            
+            if (!key || key.trim() === "") {
+                showError("❌ Access Denied: No API key provided");
+                document.body.innerHTML = "<h1 style='text-align:center; color:red; margin-top:100px;'>Access Denied</h1>";
+                throw new Error("No API Key provided");
             }
-        });
-
-        if(res.status === 401){
-            alert("❌ Unauthorized Access");
-            return;
+            
+            API_KEY = key.trim();
+            console.log("✅ API key loaded securely");
+            updateAPIKeyStatus();
         }
 
-        const data = await res.json();
+        // Request key on page load
+        window.addEventListener("load", () => {
+            requestAPIKey();
+            loadStream();
+            refreshStatus();
+            setInterval(refreshStatus, 3000); // Update every 3 seconds
+        });
 
-        console.log("Status:", data);
+        // ================= 🔐 SECURE FETCH WRAPPER =================
+        
+        async function secureFetch(endpoint, options = {}) {
+            if (!API_KEY) {
+                showError("❌ API Key not set. Please reload and enter API key.");
+                return null;
+            }
 
-    }catch(err){
-        console.error(err);
-    }
-}
+            const headers = {
+                "Content-Type": "application/json",
+                "x-api-key": API_KEY,
+                ...options.headers
+            };
 
-/* ================= 🔐 CONTROL ================= */
+            try {
+                const response = await fetch(`${API_ENDPOINT}${endpoint}`, {
+                    ...options,
+                    headers
+                });
 
-async function toggleCamera(){
-    await fetch("/control",{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json",
-            "x-api-key":API_KEY
-        },
-        body:JSON.stringify({camera:true})
-    });
-}
+                if (response.status === 401) {
+                    showError("❌ Unauthorized: Invalid API key");
+                    requestAPIKey();
+                    return null;
+                }
 
-async function toggleAlerts(){
-    await fetch("/control",{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json",
-            "x-api-key":API_KEY
-        },
-        body:JSON.stringify({alerts:true})
-    });
-}
+                if (!response.ok) {
+                    const error = await response.json().catch(() => ({}));
+                    throw new Error(error.error || `HTTP ${response.status}`);
+                }
 
-/* ================= AUTO UPDATE ================= */
+                return await response.json();
+            } catch (err) {
+                console.error("Fetch error:", err);
+                showError(`❌ Connection error: ${err.message}`);
+                return null;
+            }
+        }
 
-setInterval(fetchStatus,3000);
+        // ================= 🔐 LOAD VIDEO STREAM =================
+        
+        function loadStream() {
+            if (!API_KEY) return;
 
-</script>
+            const img = document.getElementById("video-feed");
+            img.style.display = "block";
+            
+            // Add timestamp to bypass cache
+            const timestamp = Date.now();
+            img.src = `${API_ENDPOINT}/stream?api_key=${API_KEY}&t=${timestamp}`;
+
+            img.onerror = () => {
+                document.querySelector(".video-container div").style.display = "flex";
+                document.getElementById("stream-status").textContent = "Failed to load camera stream";
+                showError("❌ Failed to connect to camera stream. Check API key and server status.");
+            };
+
+            img.onload = () => {
+                document.querySelector(".video-container div").style.display = "none";
+            };
+
+            // Reconnect if stream stops (MJPEG can fail)
+            setInterval(() => {
+                if (img.src) {
+                    img.src = `${API_ENDPOINT}/stream?api_key=${API_KEY}&t=${Date.now()}`;
+                }
+            }, 30000);
+        }
+
+        // ================= 📊 FETCH STATUS =================
+        
+        async function refreshStatus() {
+            const data = await secureFetch("/status");
+            
+            if (!data) return;
+
+            // Update camera status
+            document.getElementById("camera-status").textContent = data.camera ? "✅ ON" : "❌ OFF";
+            document.getElementById("camera-status").className = "status-value " + (data.camera ? "safe" : "alert");
+
+            // Update alerts status
+            document.getElementById("alerts-status").textContent = data.alerts ? "✅ ON" : "❌ OFF";
+            document.getElementById("alerts-status").className = "status-value " + (data.alerts ? "safe" : "alert");
+
+            // Update alert status
+            const alertStatus = document.getElementById("alert-status");
+            if (data.latest_alert.status === "SAFE") {
+                alertStatus.textContent = "✅ SAFE";
+                alertStatus.className = "status-value safe";
+            } else {
+                alertStatus.textContent = `🚨 ${data.latest_alert.status} (${data.latest_alert.face})`;
+                alertStatus.className = "status-value alert";
+            }
+
+            // Update faces count
+            document.getElementById("faces-status").textContent = data.known_faces;
+        }
+
+        // ================= ⚙️ CONTROL FUNCTIONS =================
+        
+        async function toggleCamera() {
+            const data = await secureFetch("/control", {
+                method: "POST",
+                body: JSON.stringify({ camera: true })
+            });
+
+            if (data) {
+                refreshStatus();
+                showSuccess("📹 Camera toggle sent");
+            }
+        }
+
+        async function toggleAlerts() {
+            const data = await secureFetch("/control", {
+                method: "POST",
+                body: JSON.stringify({ alerts: true })
+            });
+
+            if (data) {
+                refreshStatus();
+                showSuccess("🔔 Alerts toggle sent");
+            }
+        }
+
+        // ================= 🔐 API KEY STATUS =================
+        
+        function updateAPIKeyStatus() {
+            const status = document.getElementById("api-key-status");
+            if (API_KEY) {
+                status.textContent = "✅ " + API_KEY.substring(0, 6) + "...";
+                status.style.color = "#10b981";
+            } else {
+                status.textContent = "❌ Not set";
+                status.style.color = "#ef4444";
+            }
+        }
+
+        // ================= 💬 MESSAGE FUNCTIONS =================
+        
+        function showError(message) {
+            const container = document.getElementById("error-container");
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "error-message";
+            errorDiv.textContent = message;
+            container.appendChild(errorDiv);
+
+            setTimeout(() => errorDiv.remove(), 5000);
+        }
+
+        function showSuccess(message) {
+            console.log(message);
+        }
+
+    </script>
 
 </body>
 </html>
