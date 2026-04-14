@@ -1,1 +1,27 @@
-pip freeze > requirements.txt
+# ================= 🔐 SECURESIGHT AI - REQUIREMENTS =================
+# Install with: pip install -r requirements.txt
+
+# ================= 🎥 COMPUTER VISION =================
+opencv-python==4.8.1.78
+face_recognition==1.3.5
+numpy==1.24.3
+
+# ================= 🤖 AI/ML =================
+ultralytics==8.0.195
+torch==2.0.1
+
+# ================= 🌐 WEB FRAMEWORK =================
+Flask==3.0.0
+Werkzeug==3.0.1
+
+# ================= 🔐 SECURITY & ENV =================
+python-dotenv==1.0.0
+requests==2.31.0
+
+# ================= 🛠️ UTILITIES =================
+Pillow==10.0.0
+
+# ================= 📝 NOTES =================
+# Python version: 3.8 or higher
+# GPU support: Install torch with CUDA if you have an NVIDIA GPU
+# For CPU only: pip install torch==2.0.1+cpu
