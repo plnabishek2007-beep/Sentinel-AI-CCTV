@@ -18,3 +18,5 @@
 
 pip install -r requirements.txt
 python main.py
+🌐 Dashboard Updated:
+Your live dashboard at https://crowbar-oven-drone.ngrok-free.dev will now reflect the new SecureSight AI branding.
